@@ -2,7 +2,8 @@
     <div class="content">
       <button class="add-to-cart" @click="addToCart()">Add to Cart!</button>
       <div class="top-row">
-          <div class="top part">
+          <div class="top part" :class="{'sale-border':
+            selectedRobot.head.title}">
             <div class="robot-name">
               {{selectedRobot.head.title}}
             </div>
@@ -85,6 +86,13 @@ export default {
   },
 
   computed: {
+    headBorderStyle() {
+      return {
+        border: this.selectedRobot.head.onSale
+          ? '3px solid red'
+          : '3px solid gray',
+      };
+    },
     selectedRobot() {
       return {
         head: availableParts.heads[this.selectedHeadIndex],
@@ -95,7 +103,6 @@ export default {
       };
     },
   },
-  /* eslint-disable prefer-object-spread */
   methods: {
     addToCart() {
       const robot = this.selectedRobot;
@@ -104,7 +111,7 @@ export default {
         + robot.torso.cost
         + robot.rightArm.cost
         + robot.base.cost;
-      this.cart.push(Object.assign({}, robot, { cost }));
+      this.cart.push({ ...robot, cost });
     },
     selectNextHead() {
       this.selectedHeadIndex = getNextValidIndex(this.selectedHeadIndex,
@@ -150,13 +157,6 @@ export default {
 };
 
 </script>
-
-<style>
-  body {
-    background: linear-gradient(to bottom, #555, #999);
-    background-attachment: fixed;
-  }
-</style>
 
 <style scoped>
 
